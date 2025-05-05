@@ -592,93 +592,96 @@ export const getAuthHeader = () => ({
 // In your config/api.js file, add this to the exports:
 
 export const assessmentAPI = {
-    // Basic assessment CRUD
-    getAssessments: (params = {}) => api.get('/assessments/assessments/', { params }),
-    getAssessment: (id) => api.get(`/assessments/assessments/${id}/`),
-    createAssessment: (data) => api.post('/assessments/assessments/', data, {
-      headers: { 'X-CSRFToken': getCSRFToken(), 'Content-Type': 'application/json' }
-    }),
-    updateAssessment: (id, data) => api.patch(`/assessments/assessments/${id}/`, data, {
-      headers: { 'X-CSRFToken': getCSRFToken(), 'Content-Type': 'application/json' }
-    }),
-    deleteAssessment: (id) => api.delete(`/assessments/assessments/${id}/`, {
-      headers: { 'X-CSRFToken': getCSRFToken() }
-    }),
+  getAssessments: (params = {}) => api.get('/assessments/assessments/', { params }),
+  getAssessment: (id) => api.get(`/assessments/assessments/${id}/`),
+  createAssessment: (data) => api.post('/assessments/assessments/', data, {
+    headers: { 'X-CSRFToken': getCSRFToken(), 'Content-Type': 'application/json' }
+  }),
+  updateAssessment: (id, data) => api.patch(`/assessments/assessments/${id}/`, data, {
+    headers: { 'X-CSRFToken': getCSRFToken(), 'Content-Type': 'application/json' }
+  }),
+  deleteAssessment: (id) => api.delete(`/assessments/assessments/${id}/`, {
+    headers: { 'X-CSRFToken': getCSRFToken() }
+  }),
+  deleteAllQuestions: (id) => api.delete(`/assessments/assessments/${id}/delete_all_questions/`, {
+    headers: { 'X-CSRFToken': getCSRFToken() }
+  }),
+  deleteAllRubrics: (id) => api.delete(`/assessments/assessments/${id}/delete_all_rubrics/`, {
+    headers: { 'X-CSRFToken': getCSRFToken() }
+  }),
+  getAssessmentStats: () => api.get('/assessments/assessments/stats/'),
+  getMostAttemptedAssessment: () => api.get('/assessments/assessments/most_attempted/'),
+  getLeastAttemptedAssessment: () => api.get('/assessments/assessments/least_attempted/'),
+  getHighestScoringAssessment: () => api.get('/assessments/assessments/highest_scoring/'),
+  getLowestScoringAssessment: () => api.get('/assessments/assessments/lowest_scoring/'),
+  getQuestions: (assessmentId, params = {}) => api.get(`/assessments/assessments/${assessmentId}/questions/`, { params }),
+  getQuestion: (assessmentId, questionId) => api.get(`/assessments/assessments/${assessmentId}/questions/${questionId}/`),
+  createQuestion: async (assessmentId, questionData) => {
+    try {      const response = await axios.post(`/assessments/assessments/${assessmentId}/questions/`,
+        questionData
+      );
+      return response; // Returns the full Axios response
+    } catch (error) {
+      throw new Error(`API Error: ${error.response?.status} ${error.message}`);
+    }
+  },
+  updateQuestion: (assessmentId, questionId, data) => api.patch(`/assessments/assessments/${assessmentId}/questions/${questionId}/`, data, {
+    headers: { 'X-CSRFToken': getCSRFToken(), 'Content-Type': 'application/json' }
+  }),
 
-    // Assessment statistics
-    getAssessmentStats: () => api.get('/assessments/assessments/stats/'),
-    getMostAttemptedAssessment: () => api.get('/assessments/assessments/most_attempted/'),
-    getLeastAttemptedAssessment: () => api.get('/assessments/assessments/least_attempted/'),
-    getHighestScoringAssessment: () => api.get('/assessments/assessments/highest_scoring/'),
-    getLowestScoringAssessment: () => api.get('/assessments/assessments/lowest_scoring/'),
 
-    // Questions management
-    getQuestions: (assessmentId, params = {}) => api.get(`/assessments/assessments/${assessmentId}/questions/`, { params }),
-    getQuestion: (assessmentId, questionId) => api.get(`/assessments/assessments/${assessmentId}/questions/${questionId}/`),
-    createQuestion: (assessmentId, data) => api.post(`/assessments/assessments/${assessmentId}/questions/`, data, {
+  deleteQuestion: (assessmentId, questionId) => api.delete(`/assessments/assessments/${assessmentId}/questions/${questionId}/`, {
+    headers: { 'X-CSRFToken': getCSRFToken() }
+  }),
+  getQuestionOptions: (assessmentId, questionId) => api.get(`/assessments/assessments/${assessmentId}/questions/${questionId}/options/`),
+  createQuestionOption: (assessmentId, questionId, data) => api.post(`/assessments/assessments/${assessmentId}/questions/${questionId}/options/`, data, {
+    headers: { 'X-CSRFToken': getCSRFToken(), 'Content-Type': 'application/json' }
+  }),
+  // Corrected option endpoints
+  updateQuestionOption: (assessmentId, questionId, optionId, data) => api.patch(
+    `/assessments/assessments/${assessmentId}/questions/${questionId}/options/${optionId}/`, 
+    data, {
       headers: { 'X-CSRFToken': getCSRFToken(), 'Content-Type': 'application/json' }
-    }),
-    updateQuestion: (assessmentId, questionId, data) => api.patch(`/assessments/assessments/${assessmentId}/questions/${questionId}/`, data, {
-      headers: { 'X-CSRFToken': getCSRFToken(), 'Content-Type': 'application/json' }
-    }),
-    deleteQuestion: (assessmentId, questionId) => api.delete(`/assessments/assessments/${assessmentId}/questions/${questionId}/`, {
-      headers: { 'X-CSRFToken': getCSRFToken() }
-    }),
-
-    // Question options
-    getQuestionOptions: (assessmentId, questionId) => api.get(`/assessments/assessments/${assessmentId}/questions/${questionId}/options/`),
-    createQuestionOption: (assessmentId, questionId, data) => api.post(`/assessments/assessments/${assessmentId}/questions/${questionId}/options/`, data, {
-      headers: { 'X-CSRFToken': getCSRFToken(), 'Content-Type': 'application/json' }
-    }),
-    updateQuestionOption: (assessmentId, questionId, optionId, data) => api.patch(`/assessments/assessments/${assessmentId}/questions/${questionId}/options/${optionId}/`, data, {
-      headers: { 'X-CSRFToken': getCSRFToken(), 'Content-Type': 'application/json' }
-    }),
-    deleteQuestionOption: (assessmentId, questionId, optionId) => api.delete(`/assessments/assessments/${assessmentId}/questions/${questionId}/options/${optionId}/`, {
-      headers: { 'X-CSRFToken': getCSRFToken() }
-    }),
-
-    // Submissions
-    getSubmissions: (assessmentId, params = {}) => api.get(`/assessments/assessments/${assessmentId}/submissions/`, { params }),
-    getSubmission: (assessmentId, submissionId) => api.get(`/assessments/assessments/${assessmentId}/submissions/${submissionId}/`),
-    gradeSubmission: (assessmentId, submissionId, data) => api.post(`/assessments/assessments/${assessmentId}/submissions/${submissionId}/grade/`, data, {
-      headers: { 'X-CSRFToken': getCSRFToken(), 'Content-Type': 'application/json' }
-    }),
-    autoGradeSubmission: (assessmentId, submissionId) => api.post(`/assessments/assessments/${assessmentId}/submissions/${submissionId}/auto_grade/`, {}, {
-      headers: { 'X-CSRFToken': getCSRFToken() }
-    }),
-
-    // Rubrics
-    getRubrics: (assessmentId) => api.get(`/assessments/assessments/${assessmentId}/rubrics/`),
-    createRubric: (assessmentId, data) => api.post(`/assessments/assessments/${assessmentId}/rubrics/`, data, {
-      headers: { 'X-CSRFToken': getCSRFToken(), 'Content-Type': 'application/json' }
-    }),
-    updateRubric: (assessmentId, rubricId, data) => api.patch(`/assessments/assessments/${assessmentId}/rubrics/${rubricId}/`, data, {
-      headers: { 'X-CSRFToken': getCSRFToken(), 'Content-Type': 'application/json' }
-    }),
-    deleteRubric: (assessmentId, rubricId) => api.delete(`/assessments/assessments/${assessmentId}/rubrics/${rubricId}/`, {
-      headers: { 'X-CSRFToken': getCSRFToken() }
-    }),
-
-    // Attachments
-    getAttachments: (assessmentId) => api.get(`/assessments/assessments/${assessmentId}/attachments/`),
-    uploadAttachment: (assessmentId, formData) => api.post(`/assessments/assessments/${assessmentId}/attachments/`, formData, {
-      headers: { 'X-CSRFToken': getCSRFToken(), 'Content-Type': 'multipart/form-data' }
-    }),
-    deleteAttachment: (assessmentId, attachmentId) => api.delete(`/assessments/assessments/${assessmentId}/attachments/${attachmentId}/`, {
-      headers: { 'X-CSRFToken': getCSRFToken() }
-    }),
-
-    // Bulk operations
-    bulkCreateQuestions: (assessmentId, data) => api.post(`/assessments/assessments/${assessmentId}/questions/bulk/`, data, {
-      headers: { 'X-CSRFToken': getCSRFToken(), 'Content-Type': 'application/json' }
-    }),
-    bulkGradeSubmissions: (assessmentId, data) => api.post(`/assessments/assessments/${assessmentId}/submissions/bulk_grade/`, data, {
-      headers: { 'X-CSRFToken': getCSRFToken(), 'Content-Type': 'application/json' }
-    }),
-    downloadSubmissions: (assessmentId) => api.get(`/assessments/assessments/${assessmentId}/submissions/download/`, {
-      responseType: 'blob'
-    }),
-  };
+    }
+  ),
+  deleteQuestionOption: (assessmentId, questionId, optionId) => api.delete(`/assessments/assessments/${assessmentId}/questions/${questionId}/options/${optionId}/`, {
+    headers: { 'X-CSRFToken': getCSRFToken() }
+  }),
+  getSubmissions: (assessmentId, params = {}) => api.get(`/assessments/assessments/${assessmentId}/submissions/`, { params }),
+  getSubmission: (assessmentId, submissionId) => api.get(`/assessments/assessments/${assessmentId}/submissions/${submissionId}/`),
+  gradeSubmission: (assessmentId, submissionId, data) => api.post(`/assessments/assessments/${assessmentId}/submissions/${submissionId}/grade/`, data, {
+    headers: { 'X-CSRFToken': getCSRFToken(), 'Content-Type': 'application/json' }
+  }),
+  autoGradeSubmission: (assessmentId, submissionId) => api.post(`/assessments/assessments/${assessmentId}/submissions/${submissionId}/auto_grade/`, {}, {
+    headers: { 'X-CSRFToken': getCSRFToken() }
+  }),
+  getRubrics: (assessmentId) => api.get(`/assessments/assessments/${assessmentId}/rubrics/`),
+  createRubric: (assessmentId, data) => api.post(`/assessments/assessments/${assessmentId}/rubrics/`, data, {
+    headers: { 'X-CSRFToken': getCSRFToken(), 'Content-Type': 'application/json' }
+  }),
+  updateRubric: (assessmentId, rubricId, data) => api.patch(`/assessments/assessments/${assessmentId}/rubrics/${rubricId}/`, data, {
+    headers: { 'X-CSRFToken': getCSRFToken(), 'Content-Type': 'application/json' }
+  }),
+  deleteRubric: (assessmentId, rubricId) => api.delete(`/assessments/assessments/${assessmentId}/rubrics/${rubricId}/`, {
+    headers: { 'X-CSRFToken': getCSRFToken() }
+  }),
+  getAttachments: (assessmentId) => api.get(`/assessments/assessments/${assessmentId}/attachments/`),
+  uploadAttachment: (assessmentId, formData) => api.post(`/assessments/assessments/${assessmentId}/attachments/`, formData, {
+    headers: { 'X-CSRFToken': getCSRFToken(), 'Content-Type': 'multipart/form-data' }
+  }),
+  deleteAttachment: (assessmentId, attachmentId) => api.delete(`/assessments/assessments/${assessmentId}/attachments/${attachmentId}/`, {
+    headers: { 'X-CSRFToken': getCSRFToken() }
+  }),
+  bulkCreateQuestions: (assessmentId, data) => api.post(`/assessments/assessments/${assessmentId}/questions/bulk/`, data, {
+    headers: { 'X-CSRFToken': getCSRFToken(), 'Content-Type': 'application/json' }
+  }),
+  bulkGradeSubmissions: (assessmentId, data) => api.post(`/assessments/assessments/${assessmentId}/submissions/bulk_grade/`, data, {
+    headers: { 'X-CSRFToken': getCSRFToken(), 'Content-Type': 'application/json' }
+  }),
+  downloadSubmissions: (assessmentId) => api.get(`/assessments/assessments/${assessmentId}/submissions/download/`, {
+    responseType: 'blob'
+  }),
+};
 
 export default {
   API_BASE_URL,

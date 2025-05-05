@@ -1,11 +1,9 @@
 
 import React, { useState } from 'react';
-import {
-  AppBar, Toolbar, Typography, IconButton, Drawer, List, ListItem, ListItemIcon, ListItemText,
+import {AppBar, Toolbar, Typography, IconButton, Drawer, List, ListItem, ListItemIcon, ListItemText,
   Box, Avatar, Badge, Menu, MenuItem as MenuItemMUI, Chip, Divider, Fab, Snackbar, Alert, Button
 } from '@mui/material';
-import {
-  Menu as MenuIcon, Dashboard, School, People, Assignment, Message, Schedule, Settings, Logout,Assessment,
+import {Menu as MenuIcon, Dashboard, School, People, Assignment, Message, Schedule, Settings, Logout,Assessment,
   Notifications, Feedback, Quiz, Forum, BarChart, 
 } from '@mui/icons-material';
 import { useTheme } from '@mui/material/styles';
